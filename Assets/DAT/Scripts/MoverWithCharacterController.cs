@@ -9,6 +9,15 @@ namespace DAT
         [SerializeField, Tooltip("歩く速度")]
         float walkSpeed = 4f;
 
+        [SerializeField, Tooltip("ジャンプの高さ")]
+        float jumpHeight = 2.5f;
+
+        [SerializeField, Tooltip("登れる斜面の角度")]
+        float slope = 50f;
+
+        [SerializeField, Tooltip("登れる段差の高さ")]
+        float step = 0.2f;
+
         Rigidbody2D rb;
 
         float walkDirection = 0;
