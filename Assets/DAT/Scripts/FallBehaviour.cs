@@ -6,6 +6,8 @@ namespace DAT
 {
     public class FallBehaviour : MonoBehaviour, IFallable
     {
+        public bool IsGrounded => false;
+
         public void Fall(float delta)
         {
             Debug.Log($"落下 {delta}s");

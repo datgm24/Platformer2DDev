@@ -7,6 +7,11 @@ namespace DAT
     public interface IFallable
     {
         /// <summary>
+        /// 着地しているとき、trueを返す。
+        /// </summary>
+        bool IsGrounded { get; }
+
+        /// <summary>
         /// Y速度を設定する。
         /// </summary>
         /// <param name="y">Y方向の速度</param>
