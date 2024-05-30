@@ -49,6 +49,7 @@ namespace DAT
 
         /// <summary>
         /// 前回Castした結果、moveに対して移動できる距離を返す。
+        /// 斜面の場合、斜面に接触するまでの距離。
         /// </summary>
         /// <returns>moveVectorに対して、移動可能な距離を返す。</returns>
         public static float CanMoveDistance()
