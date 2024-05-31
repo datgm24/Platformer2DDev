@@ -15,11 +15,11 @@ namespace DAT
         /// </summary>
         public static int CollisionMax => 4;
 
-        static RaycastHit2D[] raycastHit2Ds = new RaycastHit2D[CollisionMax];
+        static RaycastHit2D[] castResults = new RaycastHit2D[CollisionMax];
         /// <summary>
         /// 前回のCastで取得した接触相手の配列。
         /// </summary>
-        public static RaycastHit2D[] RaycastHit2Ds => raycastHit2Ds;
+        public static RaycastHit2D[] CastResults => castResults;
 
         /// <summary>
         /// 前回のCastで接触した数。

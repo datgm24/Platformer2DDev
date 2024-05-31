@@ -57,7 +57,7 @@ public class CharacterCasterTests
         var cube = GameObject.Find("Cube");
         Assert.That(cube, Is.Not.Null, "キューブ取得");
         bool isContains = false;
-        foreach (var hit in CharacterCaster.RaycastHit2Ds)
+        foreach (var hit in CharacterCaster.CastResults)
         {
             if (hit.collider.gameObject == cube)
             {
