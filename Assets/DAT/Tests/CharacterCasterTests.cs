@@ -42,8 +42,10 @@ public class CharacterCasterTests
         playerRb.position = new Vector2(-8, -4.3f);
         count = CharacterCaster.Cast(playerBox.bounds.center, playerBox, new Vector2(1, 0), LayerMask.GetMask("Floor"));
         Assert.That(count, Is.EqualTo(1), "段差");
+        angle  = Vector2.SignedAngle(Vector2.left, CharacterCaster.GetNormal());
+        Assert.That(angle, Is.InRange(-0.01f, 0.01f), "左向き");
         Assert.That(CharacterCaster.CanMoveDistance, Is.InRange(0.45f, 0.55f), "段差までの距離");
-        Assert.That(CharacterCaster.GetStepHeight(), Is.InRange(0.19f, 0.21f), "段差の高さ");
+        Assert.That(CharacterCaster.GetStepHeight(), Is.InRange(0.1875f-0.01f, 0.1875f + 0.01f), "段差の高さ");
 
         // 最寄りのオブジェクトを求める
         playerRb.position = new Vector2(3, -4.3f);
