@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.TestTools;
 using DAT;
 using UnityEngine.SceneManagement;
+using System.Linq;
 
 public class CharacterCasterTests
 {
@@ -45,5 +46,24 @@ public class CharacterCasterTests
         Assert.That(CharacterCaster.GetStepHeight(), Is.InRange(0.19f, 0.21f), "段差の高さ");
 
         // 最寄りのオブジェクトを求める
+        playerRb.position = new Vector2(3, -4.3f);
+        count = CharacterCaster.Cast(playerBox.bounds.center, playerBox, new Vector2(1, 0), LayerMask.GetMask("Floor", "GimmickCollision"));
+        Assert.That(count, Is.EqualTo(2), "斜面とキューブに接触");
+        Assert.That(CharacterCaster.CanMoveDistance, Is.InRange(0.48f, 0.52f), "斜面までの距離");
+        var slope = GameObject.Find("Slope");
+        Assert.That(slope, Is.Not.Null, "斜面取得");
+        Assert.That(CharacterCaster.GetNearestObject(), Is.EqualTo(slope), "手前の斜面");
+
+        var cube = GameObject.Find("Cube");
+        Assert.That(cube, Is.Not.Null, "キューブ取得");
+        bool isContains = false;
+        foreach (var hit in CharacterCaster.RaycastHit2Ds)
+        {
+            if (hit.collider.gameObject == cube)
+            {
+                isContains = true; break;
+            }
+        }
+        Assert.That(isContains, Is.True, "キューブもとれてる");
     }
 }
