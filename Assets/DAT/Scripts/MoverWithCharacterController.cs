@@ -60,20 +60,19 @@ namespace DAT
             }
 
             // 移動方向を求める
-            Vector2 moveDir = walkDirection * Vector2.right;
+            Vector2 moveDir = Vector2.right;
 
             if (fallable.IsGrounded)
             {
                 // 着地時は、床の方向に移動を試みる
                 moveDir = Vector3.Cross(fallable.FloorNormal, Vector3.forward);
-                Debug.Log($"{fallable.FloorNormal}={moveDir}");
             }
 
+            // 移動量を求める
+            var tickDir = Time.deltaTime * walkSpeed * walkDirection * moveDir;
 
-            var v = rb.velocity;
-            v.x = walkSpeed * walkDirection;
-            rb.velocity = v;
-
+            // TODO: 接触の判定
+            rb.position += tickDir;
         }
     }
 }
