@@ -377,6 +377,18 @@ PrefabInstance:
       propertyPath: m_Offset.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 578673052830155463, guid: 4c750601dc6efff4d9192f6f4ddcf47b, type: 3}
+      propertyPath: m_BodyType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 578673052830155463, guid: 4c750601dc6efff4d9192f6f4ddcf47b, type: 3}
+      propertyPath: m_Simulated
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 578673052830155463, guid: 4c750601dc6efff4d9192f6f4ddcf47b, type: 3}
+      propertyPath: m_GravityScale
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7938845803789471830, guid: 4c750601dc6efff4d9192f6f4ddcf47b, type: 3}
       propertyPath: m_RootOrder
       value: 4

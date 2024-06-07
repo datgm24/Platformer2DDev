@@ -19,6 +19,7 @@ namespace DAT
         float step = 0.2f;
 
         Rigidbody2D rb;
+        IFallable fallable;
 
         float walkDirection = 0;
         bool isJumped = false;
@@ -26,6 +27,7 @@ namespace DAT
         void Awake()
         {
             rb = GetComponent<Rigidbody2D>();
+            fallable = GetComponent<IFallable>();
         }
 
         public void Jump()
@@ -42,11 +44,14 @@ namespace DAT
         {
             // TODO ジャンプ開始
 
-            // TODO 重力落下
-
+            // TODO 水平移動
             var v = rb.velocity;
             v.x = walkSpeed * walkDirection;
             rb.velocity = v;
+
+            // 重力落下
+            fallable?.Fall(Time.deltaTime);
+
         }
     }
 }
