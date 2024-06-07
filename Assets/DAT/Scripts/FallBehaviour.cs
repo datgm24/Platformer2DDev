@@ -13,6 +13,11 @@ namespace DAT
         /// </summary>
         public float VelocityY { get; private set; }
 
+        /// <summary>
+        /// 着地時の足元の法線方向
+        /// </summary>
+        public Vector2 FloorNormal { get; private set; }
+
         Rigidbody2D rb;
         BoxCollider2D boxCollider;
         int collideLayers;
@@ -52,6 +57,13 @@ namespace DAT
                 move = CharacterCaster.CanMoveDistance() * vertical;
                 IsGrounded = VelocityY < 0f;
                 VelocityY = 0;
+
+                // 接触面が、垂直に近い場合は、床方向は更新しない
+                var floorNormal = CharacterCaster.GetNearestRaycastHit2D().Value.normal;
+                if (Mathf.Abs(Vector2.Dot(floorNormal, Vector2.right)) < 0.9f)
+                {
+                    FloorNormal = floorNormal;
+                }
             }
 
             rb.position += move;

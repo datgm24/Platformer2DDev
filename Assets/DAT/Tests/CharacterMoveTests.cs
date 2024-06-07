@@ -19,6 +19,9 @@ public class CharacterMoveTests
         var playerObject = GameObject.FindGameObjectWithTag("Player");
         Assert.That(playerObject, Is.Not.Null);
 
+        // 入力更新を切る
+        playerObject.GetComponent<PlayerInputToAction>().enabled = false;
+
         var fallable = playerObject.GetComponent<IFallable>();
         Assert.That(fallable, Is.Not.Null);
 
@@ -27,6 +30,9 @@ public class CharacterMoveTests
         {
             yield return null;  // 1フレーム待つ
         }
+
+        // 足元の角度を確認
+        Assert.That(Vector2.Dot(Vector2.up, fallable.FloorNormal.normalized), Is.GreaterThan(0.99f), "地面上向き");
 
         // 右へ移動開始
         var moveable = playerObject.GetComponent<ICharacterMoveable>();
@@ -44,7 +50,10 @@ public class CharacterMoveTests
             yield return null;
 
             float delta = Time.time - startTime;
-            Assert.That(delta, Is.GreaterThan(overTime), "目的地につかなかった");
+            if (delta > overTime)
+            {
+                Assert.Fail("目的地につかなかった");
+            }
         }
 
         // -3.5で停止するはず

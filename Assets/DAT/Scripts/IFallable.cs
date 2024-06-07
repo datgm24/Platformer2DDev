@@ -12,6 +12,11 @@ namespace DAT
         bool IsGrounded { get; }
 
         /// <summary>
+        /// 着地時の地面の法線ベクトル
+        /// </summary>
+        Vector2 FloorNormal { get; }
+
+        /// <summary>
         /// Y速度を設定する。
         /// </summary>
         /// <param name="y">Y方向の速度</param>

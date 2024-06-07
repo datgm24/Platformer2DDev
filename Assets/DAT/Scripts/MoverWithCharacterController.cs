@@ -44,13 +44,35 @@ namespace DAT
         {
             // TODO ジャンプ開始
 
-            // TODO 水平移動
+            MoveHorizontal();
+            fallable?.Fall(Time.deltaTime);
+        }
+
+        /// <summary>
+        /// 水平移動処理。
+        /// </summary>
+        void MoveHorizontal()
+        {
+            if (fallable == null)
+            {
+                Debug.LogError("コンポーネントに、IFallableのクラスをアタッチしてください。");
+                return;
+            }
+
+            // 移動方向を求める
+            Vector2 moveDir = walkDirection * Vector2.right;
+
+            if (fallable.IsGrounded)
+            {
+                // 着地時は、床の方向に移動を試みる
+                moveDir = Vector3.Cross(fallable.FloorNormal, Vector3.forward);
+                Debug.Log($"{fallable.FloorNormal}={moveDir}");
+            }
+
+
             var v = rb.velocity;
             v.x = walkSpeed * walkDirection;
             rb.velocity = v;
-
-            // 重力落下
-            fallable?.Fall(Time.deltaTime);
 
         }
     }

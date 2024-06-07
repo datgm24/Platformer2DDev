@@ -101,7 +101,7 @@ namespace DAT
             {
                 return moveVector.magnitude;
             }
-            return nearest.Value.fraction;
+            return nearest.Value.distance;
         }
 
         /// <summary>
