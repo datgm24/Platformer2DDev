@@ -133,7 +133,9 @@ namespace DAT
             }
 
             // 足が届くので、移動量を調整する
-            tickMove.y = -CharacterCaster.GetNearestRaycastHit2D().Value.distance;
+            Debug.Log($"CanMoveDistance = {CharacterCaster.CanMoveDistance()}");
+            tickMove.y = -CharacterCaster.CanMoveDistance();
+            tickMove.y += Physics2D.defaultContactOffset;   // 接触オフセット分、上昇させる
             return tickMove;
         }
 
@@ -144,6 +146,8 @@ namespace DAT
         /// <returns>移動させるベクトル</returns>
         Vector2 CheckUpStep(Vector2 tickMove)
         {
+            Debug.Log($"{CharacterCaster.CanMoveDistance()}");
+
             // 移動量を調整
             float nextStep = CharacterCaster.GetStepHeight();
             if (nextStep <= step)
@@ -154,7 +158,9 @@ namespace DAT
             }
 
             // 乗り越えられない
-            tickMove.x = Mathf.Sign(tickMove.x) * CharacterCaster.GetNearestRaycastHit2D().Value.distance;
+            Debug.Log($"{nextStep} {CharacterCaster.CanMoveDistance()}");
+            tickMove.x = Mathf.Sign(tickMove.x) * CharacterCaster.CanMoveDistance();
+            tickMove.x = -Mathf.Sign(tickMove.x) * Physics2D.defaultContactOffset;
             return tickMove;
         }
     }
