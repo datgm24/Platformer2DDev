@@ -22,6 +22,7 @@ namespace DAT
         /// 前回のCastで取得した接触相手の配列。
         /// </summary>
         public static RaycastHit2D[] CastResults => castResults;
+        static RaycastHit2D[] tempResults = new RaycastHit2D[CollisionMax];
 
         /// <summary>
         /// 前回のCastで接触した数。
@@ -75,12 +76,27 @@ namespace DAT
             castedBoxCollider = collider;
             castedLayerMask = layerMask;
 
-            HitCount = Physics2D.BoxCastNonAlloc(
+            int count = Physics2D.BoxCastNonAlloc(
                 center + collider.offset,
                 collider.size - 2.0f * Physics2D.defaultContactOffset * Vector2.one,    // 接触の干渉距離を確保
-                0f, move.normalized, castResults, 
+                0f, move.normalized,
+                tempResults,
                 move.magnitude + Physics2D.defaultContactOffset,                        // 接触の干渉距離分、移動を伸ばす
                 layerMask);
+
+            // 移動と反対側の接触は削除する
+            HitCount = 0;
+            for (int i = 0; i < count ; i++)
+            {
+                Vector2 to = tempResults[i].point - (center + collider.offset);
+                Debug.Log($"cast to={to} point={tempResults[i].point} center={center+collider.offset} / move={move} dot={Vector2.Dot(to, move)}");
+                // 90度未満の角度のみ、結果の対象にする
+                if (Vector2.Dot(to.normalized, move.normalized) >= 0f)
+                {
+                    castResults[HitCount] = tempResults[i];
+                    HitCount++;
+                }
+            }
 
             return HitCount;
         }
@@ -181,7 +197,6 @@ namespace DAT
             }
 
             // 頭の高さから、移動方向の起点を求める
-            Debug.Log($"  nearest.x={nearest.Value.point.x}");
             Vector2 head = castedOrigin + castedBoxCollider.offset;
             head.x += l_or_r * (0.5f * castedBoxCollider.size.x - Physics2D.defaultContactOffset);
             head.y += 0.5f * castedBoxCollider.size.y - Physics2D.defaultContactOffset;
@@ -207,7 +222,6 @@ namespace DAT
 
             float footY = castedOrigin.y + castedBoxCollider.offset.y - 0.5f * castedBoxCollider.size.y;
             float distanceY = result.point.y - footY;
-            Debug.Log($"step: castedOrigin={castedOrigin.x}, {castedOrigin.y} footY={footY} distanceY={distanceY}");
             return distanceY;
         }
     }

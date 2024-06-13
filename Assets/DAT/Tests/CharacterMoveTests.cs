@@ -48,6 +48,8 @@ public class CharacterMoveTests
         moveable.Jump();
         moveable.Walk(0);
 
+        UnityEditor.EditorApplication.isPaused = true;
+
         // 頂点までの秒数、待つ
         float jumpH = 2.5f;
         float t = Mathf.Sqrt(jumpH / (-Physics2D.gravity.y * 0.5f));
@@ -57,6 +59,7 @@ public class CharacterMoveTests
         Assert.That(playerObject.transform.position.y, Is.GreaterThan(jumpY + 2f), "期待した高さへ到達");
 
         // 下りジャンプチェック
+        moveable.Walk(1);
         slopeX = -10;
         while (playerObject.transform.position.x < slopeX)
         {
