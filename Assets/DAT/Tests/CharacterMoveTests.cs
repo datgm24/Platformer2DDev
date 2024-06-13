@@ -58,10 +58,8 @@ public class CharacterMoveTests
         // t^2 = (Physics2D.gravity.y * 0.5f) / jumpH
         // 時間に負の値は不要なので、プラスのみ。
         // t = sqrt((Phyics2D.gravity.y * 0.5f) / jumpH)
-        // vf = t * Physics2D.gravity.y
-        float vf = Physics2D.gravity.y * Mathf.Sqrt((Physics2D.gravity.y * 0.5f) / jumpH);
-        float t = Mathf.Sqrt((Physics2D.gravity.y * 0.5f) / jumpH);
-        yield return new WaitForSeconds(t + 0.1f);
+        float t = Mathf.Sqrt(jumpH / (-Physics2D.gravity.y * 0.5f));
+        yield return new WaitForSeconds(2f * t + 0.1f);
         Assert.That(fallable.IsGrounded, Is.True, "着地");
     }
 

@@ -46,10 +46,32 @@ namespace DAT
 
         void FixedUpdate()
         {
-            // TODO ジャンプ開始
-
+            JumpProcess();
             MoveHorizontal();
             fallable?.Fall(Time.deltaTime);
+        }
+
+        /// <summary>
+        /// ジャンプの処理
+        /// </summary>
+        void JumpProcess()
+        {
+            if (!isJumped || !fallable.IsGrounded)
+            {
+                isJumped = false;
+                return;
+            }
+
+            isJumped = false;
+
+            // ジャンプの初速を設定
+            // 初速を求める:jumpH = t * t * Physics2D.gravity.y / 2
+            // t^2 = jumpH / (Physics2D.gravity.y * 0.5f)
+            // 時間に負の値は不要なので、プラスのみ。
+            // t = sqrt(jumpH / (Phyics2D.gravity.y * 0.5f))
+            // vf = t * Physics2D.gravity.y
+            // テストプレイ時に、動的にジャンプの高さを変更できるように、毎回算出する
+            fallable.SetVelocityY(-Physics2D.gravity.y * Mathf.Sqrt(jumpHeight / (-Physics2D.gravity.y * 0.5f)));
         }
 
         /// <summary>
