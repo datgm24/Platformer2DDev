@@ -65,10 +65,9 @@ public class CharacterMoveTests
             yield return null;
 
             // 座標をオーバーしたらアウト
-            Assert.That(playerObject.transform.position.x, Is.GreaterThan(targetX));
+            Assert.That(playerObject.transform.position.x, Is.LessThan(targetX));
         }
 
-        Assert.That(playerObject.transform.position.x, Is.LessThan(targetX));
         yield return new WaitForSeconds(1);
     }
 }
