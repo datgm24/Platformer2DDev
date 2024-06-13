@@ -1,8 +1,6 @@
-using Codice.CM.Triggers;
-using System.Collections;
-using System.Collections.Generic;
+//#define DEBUG_LOG
+
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 namespace DAT
 {
@@ -96,7 +94,7 @@ namespace DAT
             for (int i = 0; i < count ; i++)
             {
                 Vector2 to = tempResults[i].point - (center + collider.offset);
-                Debug.Log($"cast to={to} point={tempResults[i].point} center={center+collider.offset} / dotDir={dotDir} dot={Vector2.Dot(to.normalized, dotDir)}");
+                Log($"cast to={to} point={tempResults[i].point} center={center+collider.offset} / dotDir={dotDir} dot={Vector2.Dot(to.normalized, dotDir)}");
                 // 90度未満の角度のみ、結果の対象にする
                 if (Vector2.Dot(to.normalized, dotDir) >= 0f)
                 {
@@ -230,6 +228,12 @@ namespace DAT
             float footY = castedOrigin.y + castedBoxCollider.offset.y - 0.5f * castedBoxCollider.size.y;
             float distanceY = result.point.y - footY;
             return distanceY;
+        }
+
+        [System.Diagnostics.Conditional("DEBUG_LOG")]
+        public static void Log(object mes)
+        {
+            Debug.Log(mes);
         }
     }
 }

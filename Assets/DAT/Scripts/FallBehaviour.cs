@@ -1,5 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
+//#define DEBUG_LOG
+
 using UnityEngine;
 
 namespace DAT
@@ -41,10 +41,12 @@ namespace DAT
                 boxCollider,
                 move, collideLayers);
 
+#if DEBUG_LOG
             if (count>0)
             {
                 Debug.Log($"fall point={CharacterCaster.GetNearestRaycastHit2D().Value.point} {CharacterCaster.CanMoveDistance()}");
             }
+#endif
             if (count == 0)
             {
                 // 落下継続

@@ -51,7 +51,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   walkSpeed: 4
   jumpHeight: 2.5
-  slope: 50
+  slope: 46
   step: 0.2
 --- !u!114 &5577381372889981262
 MonoBehaviour:

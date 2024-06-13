@@ -1,3 +1,5 @@
+//#define DEBUG_LOG
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,7 +15,7 @@ namespace DAT
         float jumpHeight = 2.5f;
 
         [SerializeField, Tooltip("登れる斜面の角度")]
-        float slope = 50f;
+        float slope = 46f;
 
         [SerializeField, Tooltip("登れる段差の高さ")]
         float step = 0.2f;
@@ -47,13 +49,13 @@ namespace DAT
         void FixedUpdate()
         {
             JumpProcess();
-            Debug.Log($"1: {rb.position.y} {fallable.VelocityY} {fallable.IsGrounded}");
+            Log($"1: {rb.position.y} {fallable.VelocityY} {fallable.IsGrounded}");
             MoveHorizontal();
-            Debug.Log($"2: {rb.position.y} {fallable.VelocityY} {fallable.IsGrounded}");
+            Log($"2: {rb.position.y} {fallable.VelocityY} {fallable.IsGrounded}");
             OnGround();
-            Debug.Log($"3: {rb.position.y} {fallable.VelocityY} {fallable.IsGrounded}");
+            Log($"3: {rb.position.y} {fallable.VelocityY} {fallable.IsGrounded}");
             fallable?.Fall(Time.deltaTime);
-            Debug.Log($"4: {rb.position.y} {fallable.VelocityY} {fallable.IsGrounded}");
+            Log($"4: {rb.position.y} {fallable.VelocityY} {fallable.IsGrounded}");
         }
 
         /// <summary>
@@ -90,11 +92,6 @@ namespace DAT
         {
             if (!isJumped || !fallable.IsGrounded)
             {
-                if (isJumped && !fallable.IsGrounded)
-                {
-                    UnityEditor.EditorApplication.isPaused = true;
-                }
-
                 isJumped = false;
                 return;
             }
@@ -137,7 +134,7 @@ namespace DAT
             // 水平方向の接触の判定
             tickMove = CheckTickMove(tickMove);
 
-            Debug.Log($"  Adjusted Tick Move ={tickMove}");
+            Log($"  Adjusted Tick Move ={tickMove}");
 
             // 確定した移動を反映
             rb.position += tickMove;
@@ -161,7 +158,7 @@ namespace DAT
                 boxCollider, tickMove,
                 collideLayers);
 
-            Debug.Log($"Check Tick Move {count} tick={tickMove}");
+            Log($"Check Tick Move {count} tick={tickMove}");
 
             // 接触がなければ、下方向の段差チェック
             if ((count == 0) && (fallable.VelocityY <= 0))
@@ -209,8 +206,10 @@ namespace DAT
         Vector2 CheckUpStep(Vector2 tickMove)
         {
             // 移動量を調整
+            Vector2 floorNormal = CharacterCaster.GetNormal();
+            floorNormal.x = -Mathf.Abs(floorNormal.x);
             float nextStep = CharacterCaster.GetStepHeight();
-            if (nextStep <= step)
+            if ((nextStep <= step) || (Vector2.Angle(Vector2.up, floorNormal) < slope))
             {
                 // 乗り越えられる
                 tickMove.y = nextStep + Physics2D.defaultContactOffset;
@@ -221,6 +220,12 @@ namespace DAT
             tickMove.x = Mathf.Sign(tickMove.x) * CharacterCaster.CanMoveDistance();
             tickMove.x -= Mathf.Sign(tickMove.x) * Physics2D.defaultContactOffset;
             return tickMove;
+        }
+
+        [System.Diagnostics.Conditional("DEBUG_LOG")]
+        void Log(object mes)
+        {
+            Debug.Log(mes);
         }
     }
 }
