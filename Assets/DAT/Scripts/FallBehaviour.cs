@@ -6,13 +6,9 @@ namespace DAT
 {
     public class FallBehaviour : MonoBehaviour, IFallable
     {
-        public bool IsGrounded { get; private set; }
-
-        /// <summary>
-        /// Y速度。
-        /// </summary>
         public float VelocityY { get; private set; }
 
+        public bool IsGrounded { get; private set; }
         /// <summary>
         /// 着地時の足元の法線方向
         /// </summary>

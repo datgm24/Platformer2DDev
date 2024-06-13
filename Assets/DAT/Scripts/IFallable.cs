@@ -7,6 +7,11 @@ namespace DAT
     public interface IFallable
     {
         /// <summary>
+        /// Y速度。
+        /// </summary>
+        public float VelocityY { get; }
+
+        /// <summary>
         /// 着地しているとき、trueを返す。
         /// </summary>
         bool IsGrounded { get; }

@@ -10,6 +10,62 @@ using static UnityEngine.GraphicsBuffer;
 public class CharacterMoveTests
 {
     [UnityTest]
+    public IEnumerator JumpTest()
+    {
+        // テストに必要な要素の初期化
+        SceneManager.LoadScene("CharacterMoveTest");
+        yield return null;
+
+        var playerObject = GameObject.FindGameObjectWithTag("Player");
+        Assert.That(playerObject, Is.Not.Null);
+
+        // 入力更新を切る
+        playerObject.GetComponent<PlayerInputToAction>().enabled = false;
+
+        var fallable = playerObject.GetComponent<IFallable>();
+        Assert.That(fallable, Is.Not.Null);
+
+        // 着地待ち
+        while (!fallable.IsGrounded)
+        {
+            yield return null;
+        }
+
+        // ジャンプの確認
+        float jumpTime = Time.time;
+        var moveable = playerObject.GetComponent<ICharacterMoveable>();
+        Assert.That(moveable, Is.Not.Null);
+        moveable.Jump();
+
+        yield return new WaitForFixedUpdate();
+
+        float vy = fallable.VelocityY;
+        Assert.That(vy, Is.GreaterThan(0), "上昇");
+        Assert.That(fallable.IsGrounded, Is.False, "空中");
+
+        yield return new WaitForSeconds(0.1f);
+        Assert.That(fallable.VelocityY, Is.LessThan(vy), "減速している");
+        vy = fallable.VelocityY;
+
+        // 空中ジャンプができない
+        moveable.Jump();
+        yield return new WaitForFixedUpdate();
+        Assert.That(fallable.VelocityY, Is.LessThan(vy), "空中ジャンプしてない");
+
+        // 着地したか
+        float jumpH = 2.5f;
+        // 初速を求める:jumpH = t * t * Physics2D.gravity.y / 2
+        // t^2 = (Physics2D.gravity.y * 0.5f) / jumpH
+        // 時間に負の値は不要なので、プラスのみ。
+        // t = sqrt((Phyics2D.gravity.y * 0.5f) / jumpH)
+        // vf = t * Physics2D.gravity.y
+        float vf = Physics2D.gravity.y * Mathf.Sqrt((Physics2D.gravity.y * 0.5f) / jumpH);
+        float t = Mathf.Sqrt((Physics2D.gravity.y * 0.5f) / jumpH);
+        yield return new WaitForSeconds(t + 0.1f);
+        Assert.That(fallable.IsGrounded, Is.True, "着地");
+    }
+
+    [UnityTest]
     public IEnumerator CharacterMoveTestsWithEnumeratorPasses()
     {
         // テストに必要な要素の初期化
