@@ -10,6 +10,42 @@ using static UnityEngine.GraphicsBuffer;
 public class CharacterMoveTests
 {
     [UnityTest]
+    public IEnumerator WalkJumpTest()
+    {
+        // テストに必要な要素の初期化
+        SceneManager.LoadScene("CharacterMoveTest");
+        yield return null;
+
+        var playerObject = GameObject.FindGameObjectWithTag("Player");
+        Assert.That(playerObject, Is.Not.Null);
+
+        // 入力更新を切る
+        playerObject.GetComponent<PlayerInputToAction>().enabled = false;
+
+        var fallable = playerObject.GetComponent<IFallable>();
+        Assert.That(fallable, Is.Not.Null);
+
+        // 着地待ち
+        while (!fallable.IsGrounded)
+        {
+            yield return null;
+        }
+
+        // 右へ移動しながらジャンプ
+        var moveable = playerObject.GetComponent<ICharacterMoveable>();
+        moveable.Walk(1);
+        moveable.Jump();
+
+        float posY = playerObject.transform.position.y;
+        float jumpH = 2.5f;
+        float t = Mathf.Sqrt(jumpH / (-Physics2D.gravity.y * 0.5f));
+        yield return new WaitForSeconds(t);
+
+        // ジャンプが継続
+        Assert.That(playerObject.transform.position.y - posY, Is.GreaterThan(2f), "上昇した");
+    }
+
+    [UnityTest]
     public IEnumerator JumpTest()
     {
         // テストに必要な要素の初期化

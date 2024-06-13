@@ -62,6 +62,7 @@ namespace DAT
                 }
             }
 
+            Debug.Log($"rb.pos({rb.position.y}) + move({move.y})");
             rb.position += move;
         }
 

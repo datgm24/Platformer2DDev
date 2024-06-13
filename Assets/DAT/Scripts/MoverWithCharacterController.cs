@@ -46,9 +46,11 @@ namespace DAT
 
         void FixedUpdate()
         {
+            Debug.Log($"start {rb.position.y} {fallable.VelocityY} {fallable.IsGrounded}");
             JumpProcess();
             MoveHorizontal();
             fallable?.Fall(Time.deltaTime);
+            Debug.Log($"done {rb.position.y} {fallable.VelocityY} {fallable.IsGrounded}");
         }
 
         /// <summary>
@@ -123,7 +125,7 @@ namespace DAT
                 collideLayers);
 
             // 接触がなければ、下方向の段差チェック
-            if (count == 0)
+            if ((count == 0) && (fallable.VelocityY <= 0))
             {
                 return CheckDownStep(tickMove);
             }
