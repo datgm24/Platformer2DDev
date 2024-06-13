@@ -50,8 +50,37 @@ namespace DAT
             Debug.Log($"1: {rb.position.y} {fallable.VelocityY} {fallable.IsGrounded}");
             MoveHorizontal();
             Debug.Log($"2: {rb.position.y} {fallable.VelocityY} {fallable.IsGrounded}");
-            fallable?.Fall(Time.deltaTime);
+            OnGround();
             Debug.Log($"3: {rb.position.y} {fallable.VelocityY} {fallable.IsGrounded}");
+            fallable?.Fall(Time.deltaTime);
+            Debug.Log($"4: {rb.position.y} {fallable.VelocityY} {fallable.IsGrounded}");
+        }
+
+        /// <summary>
+        /// 着地時、斜め床などで宙に浮かないように、段差分落下させてみて、
+        /// 地面から距離があったら接地させる。
+        /// </summary>
+        void OnGround()
+        {
+            // 空中の時は処理不要
+            if (!fallable.IsGrounded)
+            {
+                return;
+            }
+
+            int count = CharacterCaster.Cast(rb.position, boxCollider, step * Vector2.down, collideLayers);
+            // 落差分、地面がなければ落下するので処理は不要
+            if (count == 0)
+            {
+                return;
+            }
+
+            float distance = CharacterCaster.GetNearestRaycastHit2D().Value.distance;
+            if (distance > Physics2D.defaultContactOffset)
+            {
+                // 移動距離が残っているので、移動させて接地させる
+                rb.position += (distance - Physics2D.defaultContactOffset) * Vector2.down;
+            }
         }
 
         /// <summary>
@@ -61,6 +90,11 @@ namespace DAT
         {
             if (!isJumped || !fallable.IsGrounded)
             {
+                if (isJumped && !fallable.IsGrounded)
+                {
+                    UnityEditor.EditorApplication.isPaused = true;
+                }
+
                 isJumped = false;
                 return;
             }

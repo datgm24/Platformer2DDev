@@ -48,7 +48,7 @@ public class CharacterMoveTests
         moveable.Jump();
         moveable.Walk(0);
 
-        UnityEditor.EditorApplication.isPaused = true;
+        //UnityEditor.EditorApplication.isPaused = true;
 
         // 頂点までの秒数、待つ
         float jumpH = 2.5f;

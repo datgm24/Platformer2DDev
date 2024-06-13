@@ -86,12 +86,19 @@ namespace DAT
 
             // 移動と反対側の接触は削除する
             HitCount = 0;
+            Vector2 dotDir = moveVector.normalized;
+            if (!Mathf.Approximately(moveVector.x, 0f))
+            {
+                // 水平移動があれば、水平移動チェック
+                dotDir.y = 0;
+                dotDir.Normalize();
+            }
             for (int i = 0; i < count ; i++)
             {
                 Vector2 to = tempResults[i].point - (center + collider.offset);
-                Debug.Log($"cast to={to} point={tempResults[i].point} center={center+collider.offset} / move={move} dot={Vector2.Dot(to, move)}");
+                Debug.Log($"cast to={to} point={tempResults[i].point} center={center+collider.offset} / dotDir={dotDir} dot={Vector2.Dot(to.normalized, dotDir)}");
                 // 90度未満の角度のみ、結果の対象にする
-                if (Vector2.Dot(to.normalized, move.normalized) >= 0f)
+                if (Vector2.Dot(to.normalized, dotDir) >= 0f)
                 {
                     castResults[HitCount] = tempResults[i];
                     HitCount++;
