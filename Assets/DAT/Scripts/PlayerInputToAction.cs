@@ -24,6 +24,10 @@ namespace DAT
 
         void Update()
         {
+            if (Input.GetButtonDown("Jump"))
+            {
+                Moveable.Jump();
+            }
             Moveable.Walk(Input.GetAxisRaw("Horizontal"));
         }
     }
