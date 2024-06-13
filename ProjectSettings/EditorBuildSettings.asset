@@ -6,9 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/DAT/Scenes/SandboxStage.unity
+    path: Assets/DAT/WalkerSample/Demo/Scenes/SandboxStage.unity
     guid: 5eda372e2bcf25f498c88d5f23e0af8c
   - enabled: 1
-    path: Assets/DAT/Tests/Scenes/CharacterMoveTest.unity
+    path: Assets/DAT/WalkerSample/Demo/Tests/Scenes/CharacterMoveTest.unity
     guid: 81dded0611fc9b349886ed33fd004ab2
   m_configObjects: {}
