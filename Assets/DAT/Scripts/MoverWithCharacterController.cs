@@ -47,8 +47,11 @@ namespace DAT
         void FixedUpdate()
         {
             JumpProcess();
+            Debug.Log($"1: {rb.position.y} {fallable.VelocityY} {fallable.IsGrounded}");
             MoveHorizontal();
+            Debug.Log($"2: {rb.position.y} {fallable.VelocityY} {fallable.IsGrounded}");
             fallable?.Fall(Time.deltaTime);
+            Debug.Log($"3: {rb.position.y} {fallable.VelocityY} {fallable.IsGrounded}");
         }
 
         /// <summary>
@@ -91,7 +94,7 @@ namespace DAT
             if (fallable.IsGrounded)
             {
                 // 着地時は、床の方向に移動を試みる
-                moveDir = Vector3.Cross(fallable.FloorNormal, Vector3.forward);
+                moveDir = Vector3.Cross(fallable.FloorNormal, Vector3.forward).normalized;
             }
 
             // 移動量を求める
@@ -99,6 +102,8 @@ namespace DAT
 
             // 水平方向の接触の判定
             tickMove = CheckTickMove(tickMove);
+
+            Debug.Log($"  Adjusted Tick Move ={tickMove}");
 
             // 確定した移動を反映
             rb.position += tickMove;
@@ -122,6 +127,8 @@ namespace DAT
                 boxCollider, tickMove,
                 collideLayers);
 
+            Debug.Log($"Check Tick Move {count} tick={tickMove}");
+
             // 接触がなければ、下方向の段差チェック
             if ((count == 0) && (fallable.VelocityY <= 0))
             {
@@ -143,7 +150,7 @@ namespace DAT
 
             // 下方向に段差チェック
             int count = CharacterCaster.Cast(
-                rb.position+boxCollider.offset,
+                nextPos + boxCollider.offset,
                 boxCollider,
                 step * Vector2.down,
                 collideLayers);
@@ -172,7 +179,7 @@ namespace DAT
             if (nextStep <= step)
             {
                 // 乗り越えられる
-                tickMove.y = nextStep;
+                tickMove.y = nextStep + Physics2D.defaultContactOffset;
                 return tickMove;
             }
 

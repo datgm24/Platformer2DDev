@@ -41,6 +41,10 @@ namespace DAT
                 boxCollider,
                 move, collideLayers);
 
+            if (count>0)
+            {
+                Debug.Log($"fall point={CharacterCaster.GetNearestRaycastHit2D().Value.point} {CharacterCaster.CanMoveDistance()}");
+            }
             if (count == 0)
             {
                 // 落下継続

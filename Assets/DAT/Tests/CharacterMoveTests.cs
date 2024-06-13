@@ -10,6 +10,73 @@ using static UnityEngine.GraphicsBuffer;
 public class CharacterMoveTests
 {
     [UnityTest]
+    public IEnumerator SlopeJumpTest()
+    {
+        // テストに必要な要素の初期化
+        SceneManager.LoadScene("CharacterMoveTest");
+        yield return null;
+
+        var playerObject = GameObject.FindGameObjectWithTag("Player");
+        Assert.That(playerObject, Is.Not.Null);
+
+        // 入力更新を切る
+        playerObject.GetComponent<PlayerInputToAction>().enabled = false;
+
+        var fallable = playerObject.GetComponent<IFallable>();
+        Assert.That(fallable, Is.Not.Null);
+
+        // 着地待ち
+        while (!fallable.IsGrounded)
+        {
+            yield return null;
+        }
+
+        // 右へ移動
+        var moveable = playerObject.GetComponent<ICharacterMoveable>();
+        moveable.Walk(1);
+
+        // 斜面まで待つ
+        float slopeX = -13;
+        while (playerObject.transform.position.x < slopeX)
+        {
+            yield return null;
+        }
+
+        // ジャンプ
+        float jumpY = playerObject.transform.position.y;
+        float jumpTime = Time.time;
+        moveable.Jump();
+        moveable.Walk(0);
+
+        // 頂点までの秒数、待つ
+        float jumpH = 2.5f;
+        float t = Mathf.Sqrt(jumpH / (-Physics2D.gravity.y * 0.5f));
+        yield return new WaitForSeconds(t);
+
+        // 高さをチェック
+        Assert.That(playerObject.transform.position.y, Is.GreaterThan(jumpY + 2f), "期待した高さへ到達");
+
+        // 下りジャンプチェック
+        slopeX = -10;
+        while (playerObject.transform.position.x < slopeX)
+        {
+            yield return null;
+        }
+
+        // ジャンプ
+        jumpY = playerObject.transform.position.y;
+        jumpTime = Time.time;
+        moveable.Jump();
+
+        // 頂点までの秒数、待つ
+        t = Mathf.Sqrt(jumpH / (-Physics2D.gravity.y * 0.5f));
+        yield return new WaitForSeconds(t);
+
+        // 高さをチェック
+        Assert.That(playerObject.transform.position.y, Is.GreaterThan(jumpY + 2f), "期待した高さへ到達");
+    }
+
+    [UnityTest]
     public IEnumerator WalkJumpTest()
     {
         // テストに必要な要素の初期化

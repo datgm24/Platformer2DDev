@@ -2,6 +2,7 @@ using Codice.CM.Triggers;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace DAT
 {
@@ -166,7 +167,7 @@ namespace DAT
         }
 
         /// <summary>
-        /// 水平移動時の足元から、接触オブジェクトの上面への距離。
+        /// 水平移動した際に、移動後の足元から、接触オブジェクトの上面への距離を求める。
         /// </summary>
         /// <returns>Y方向の距離</returns>
         public static float GetStepHeight()
@@ -180,9 +181,15 @@ namespace DAT
             }
 
             // 頭の高さから、移動方向の起点を求める
-            Vector2 from = castedOrigin + 0.5f * castedBoxCollider.size + castedBoxCollider.offset + Physics2D.defaultContactOffset * Vector2.down;
-            from.x = nearest.Value.point.x - l_or_r * Physics2D.defaultContactOffset;
-            var result = Physics2D.Raycast(from, l_or_r * Vector2.right, 2f * Physics2D.defaultContactOffset,
+            Debug.Log($"  nearest.x={nearest.Value.point.x}");
+            Vector2 head = castedOrigin + castedBoxCollider.offset;
+            head.x += l_or_r * (0.5f * castedBoxCollider.size.x - Physics2D.defaultContactOffset);
+            head.y += 0.5f * castedBoxCollider.size.y - Physics2D.defaultContactOffset;
+            float rayLength = moveVector.magnitude + 2f * Physics2D.defaultContactOffset;
+            var result = Physics2D.Raycast(
+                head,
+                moveVector.normalized,
+                rayLength,
                 castedLayerMask);
             if (result.collider != null)
             {
@@ -190,16 +197,17 @@ namespace DAT
                 return castedBoxCollider.size.y;
             }
 
-            from.x += l_or_r * 2f * Physics2D.defaultContactOffset;
-            result = Physics2D.Raycast(from, Vector2.down, castedBoxCollider.size.y, castedLayerMask);
+            Vector2 movedHead = head + rayLength * moveVector.normalized; 
+            result = Physics2D.Raycast(movedHead, Vector2.down, castedBoxCollider.size.y, castedLayerMask);
             if (result.collider == null)
             {
                 // 足元に何もないので、段差なし
                 return 0;
             }
 
-            float footY = castedOrigin.y - 0.5f * castedBoxCollider.size.y + castedBoxCollider.offset.y;
+            float footY = castedOrigin.y + castedBoxCollider.offset.y - 0.5f * castedBoxCollider.size.y;
             float distanceY = result.point.y - footY;
+            Debug.Log($"step: castedOrigin={castedOrigin.x}, {castedOrigin.y} footY={footY} distanceY={distanceY}");
             return distanceY;
         }
     }
