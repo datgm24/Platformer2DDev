@@ -145,8 +145,6 @@ namespace DAT
         /// <returns>移動させるベクトル</returns>
         Vector2 CheckUpStep(Vector2 tickMove)
         {
-            Debug.Log($"{CharacterCaster.CanMoveDistance()}");
-
             // 移動量を調整
             float nextStep = CharacterCaster.GetStepHeight();
             if (nextStep <= step)
@@ -157,7 +155,6 @@ namespace DAT
             }
 
             // 乗り越えられない
-            Debug.Log($"{nextStep} {CharacterCaster.CanMoveDistance()}");
             tickMove.x = Mathf.Sign(tickMove.x) * CharacterCaster.CanMoveDistance();
             tickMove.x -= Mathf.Sign(tickMove.x) * Physics2D.defaultContactOffset;
             return tickMove;
