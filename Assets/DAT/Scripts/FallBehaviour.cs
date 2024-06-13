@@ -54,7 +54,7 @@ namespace DAT
             {
                 // 接触したので、着地
                 Vector2 vertical = Mathf.Sign(VelocityY) * Vector2.up;
-                move = CharacterCaster.CanMoveDistance() * vertical;
+                move = (CharacterCaster.CanMoveDistance() - Physics2D.defaultContactOffset) * vertical;
                 IsGrounded = VelocityY < 0f;
                 VelocityY = 0;
 

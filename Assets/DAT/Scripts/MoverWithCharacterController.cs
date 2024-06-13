@@ -133,7 +133,6 @@ namespace DAT
             }
 
             // 足が届くので、移動量を調整する
-            Debug.Log($"CanMoveDistance = {CharacterCaster.CanMoveDistance()}");
             tickMove.y = -CharacterCaster.CanMoveDistance();
             tickMove.y += Physics2D.defaultContactOffset;   // 接触オフセット分、上昇させる
             return tickMove;
@@ -160,7 +159,7 @@ namespace DAT
             // 乗り越えられない
             Debug.Log($"{nextStep} {CharacterCaster.CanMoveDistance()}");
             tickMove.x = Mathf.Sign(tickMove.x) * CharacterCaster.CanMoveDistance();
-            tickMove.x = -Mathf.Sign(tickMove.x) * Physics2D.defaultContactOffset;
+            tickMove.x -= Mathf.Sign(tickMove.x) * Physics2D.defaultContactOffset;
             return tickMove;
         }
     }
