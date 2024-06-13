@@ -46,11 +46,9 @@ namespace DAT
 
         void FixedUpdate()
         {
-            Debug.Log($"start {rb.position.y} {fallable.VelocityY} {fallable.IsGrounded}");
             JumpProcess();
             MoveHorizontal();
             fallable?.Fall(Time.deltaTime);
-            Debug.Log($"done {rb.position.y} {fallable.VelocityY} {fallable.IsGrounded}");
         }
 
         /// <summary>
