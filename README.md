@@ -26,10 +26,6 @@ Unity用の斜面に対応する2Dプラットフォーマー用プレイヤー�
 - 押したり、動かす予定があって、かつ、接触するオブジェクトに、GimmickCollisionを設定
 - ゴールや死亡エリアなどの、接触しないで、仕掛けが発動するオブジェクトには、GimmickTrigger
 
-## プレイヤーの登場
-
-- 自分が作成したシーンを開く
-- Assets/DAT/WalkerSample/Prefabsフォルダー内のPlayerプレハブを、自作シーンに配置すれば、操作できるはず
 
 ## デモの実行
 
@@ -48,10 +44,53 @@ Assets/DAT/WalkerSample/Demo/Scenesフォルダー内のSandboxStageが、デモ
 - Test Runnerパネルの上部のボタンをクリックして、PlayModeに切り替えます
 - Run Allをクリックします
 
-## 設定
+## サンプルプレイヤーの配置
 
-プロジェクトへの利用方法です。
+レイヤーなどの設定ができたら、プレハブをシーンに配置すればサンプルのプレイヤーを操作できるようになります。
 
+- 自分が作成したシーンを開く
+- Assets/DAT/WalkerSample/Prefabsフォルダー内のPlayerプレハブを、自作シーンに配置すれば、操作できるはず
+
+## サンプルプレイヤーの構造
+
+サンプルのプレイヤーは、以下のような構造になっています。
+
+- レイヤーは、Player
+- 以下のスクリプトがアタッチ
+  - MoverWithCharacterController
+    - IMoveableインターフェースを実装しています
+    - IMoveableを通して、Walk()とJump()メソッドを提供します
+    - 平行移動を制御します。落下は、FallBehaviourで実行します
+  - PlayerInputToAction
+    - キー入力を読んで、移動を呼び出し
+  - FallBehaviour
+    - IFallableインターフェースを実装しており、Fall()で落下処理
+  - Rigidbody2D
+    - 以下を設定
+      - BodyTypeをKinematic=機械的に動かす=物理的に動かせない=押せなくなる
+      - Simulatedはチェックのまま。これがないと当たり判定なども無効になるため
+  - BoxCollider2D
+    - 当たり判定のための何らかのコライダー
+
+
+### 動かせるブロックを作成する
+
+敵や動かせるブロックなども、プレイヤーと似たような構造で作ることができます。
+
+
+
+レイヤーをGimmickCollision
+ブロックを制御するためのスクリプトをアタッチ
+MoverWithCharacterController
+FallBehaviour
+Rigidbody2D。プレイヤーと同じ設定にする
+何らかのCollider2D
+ブロック制御のスクリプト
+IMoveableインターフェースをGetComponentで取得
+IMoveable.Walk()メソッドを使うことができる。これに-1を与えると左へ、1を与えると右、0なら止まる
+移動速度は、MoverWithCharacterControllerのWalkSpeedで設定
+磁石の判定を確認して、必要に応じてWalk()メソッドを呼び出す
+動きがおかしい場合、Rigidbody2Dが関係するオブジェクトのScaleが1以外になっていないかを確認
 
 
 ## ライセンス
